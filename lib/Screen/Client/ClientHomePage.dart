@@ -18,12 +18,9 @@ import 'package:restaurant/Widgets/AnimationRoute.dart';
 import 'package:restaurant/Widgets/BottomNavigationFrave.dart';
 import 'package:restaurant/Widgets/Widgets.dart';
 
-
 class ClientHomePage extends StatelessWidget {
-
   @override
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
     return Scaffold(
@@ -34,7 +31,7 @@ class ClientHomePage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 20.0),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -43,19 +40,23 @@ class ClientHomePage extends StatelessWidget {
                       height: 45,
                       width: 45,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage( URLS.BASE_URL + authBloc.state.user!.image.toString())
-                        )
-                      ),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(URLS.BASE_URL +
+                                  authBloc.state.user!.image.toString()))),
                     ),
                     const SizedBox(width: 8.0),
-                    TextFrave(text: DateFrave.getDateFrave() + ', ${authBloc.state.user!.firstName}', fontSize: 17, color: ColorsFrave.secundaryColor),
+                    TextFrave(
+                        text: DateFrave.getDateFrave() +
+                            ', ${authBloc.state.user!.firstName}',
+                        fontSize: 17,
+                        color: ColorsFrave.secundaryColor),
                   ],
                 ),
                 InkWell(
-                  onTap: () => Navigator.pushReplacement(context, routeFrave(page: CartClientPage())),
+                  onTap: () => Navigator.pushReplacement(
+                      context, routeFrave(page: CartClientPage())),
                   child: Stack(
                     children: [
                       const Icon(Icons.shopping_bag_outlined, size: 30),
@@ -66,27 +67,29 @@ class ClientHomePage extends StatelessWidget {
                             height: 20,
                             width: 15,
                             decoration: BoxDecoration(
-                              color: Color(0xff0C6CF2),
-                              shape: BoxShape.circle
-                            ),
+                                color: Color(0xff0C6CF2),
+                                shape: BoxShape.circle),
                             child: Center(
-                              child: BlocBuilder<CartBloc, CartState>(
-                                builder: (context, state) 
-                                  => TextFrave(text: state.quantityCart.toString(), color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)
-                              )
-                            )
-                          ),
-                        ),
+                                child: BlocBuilder<CartBloc, CartState>(
+                                    builder: (context, state) => TextFrave(
+                                        text: state.quantityCart.toString(),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15)))),
+                      ),
                     ],
                   ),
                 )
               ],
-            ),            
+            ),
             const SizedBox(height: 20.0),
             const Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: TextFrave(text: 'What do you want eat today?', fontSize: 28, maxLine: 2, fontWeight: FontWeight.w500 )
-            ),
+                padding: EdgeInsets.only(right: 50.0),
+                child: TextFrave(
+                    text: 'What do you want eat today?',
+                    fontSize: 28,
+                    maxLine: 2,
+                    fontWeight: FontWeight.w500)),
             const SizedBox(height: 20.0),
             Row(
               children: [
@@ -94,10 +97,10 @@ class ClientHomePage extends StatelessWidget {
                   height: 60,
                   width: 60,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[300]!),
-                    borderRadius: BorderRadius.circular(15.0)
-                  ),
-                  child: const Icon(Icons.place_outlined, size: 38, color: Colors.grey ),
+                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(15.0)),
+                  child: const Icon(Icons.place_outlined,
+                      size: 38, color: Colors.grey),
                 ),
                 const SizedBox(width: 10.0),
                 Column(
@@ -105,68 +108,77 @@ class ClientHomePage extends StatelessWidget {
                   children: [
                     const TextFrave(text: 'Address'),
                     InkWell(
-                      onTap: () => Navigator.push(context, routeFrave(page: ListAddressesPage())),
+                      onTap: () => Navigator.push(
+                          context, routeFrave(page: ListAddressesPage())),
                       child: BlocBuilder<UserBloc, UserState>(
-                        builder: (context, state) 
-                          => TextFrave( 
-                              text: ( state.addressName != '' ) ? state.addressName : 'without direction', 
-                              color: ColorsFrave.primaryColor, 
-                              fontSize: 17,
-                              maxLine: 1,
-                            )
-                      ),
+                          builder: (context, state) => TextFrave(
+                                text: (state.addressName != '')
+                                    ? state.addressName
+                                    : 'without direction',
+                                color: ColorsFrave.primaryColor,
+                                fontSize: 17,
+                                maxLine: 1,
+                              )),
                     )
                   ],
                 )
               ],
             ),
-            const SizedBox(height: 20.0),            
+            const SizedBox(height: 20.0),
             FutureBuilder<List<Category>>(
               future: categoryController.getAllCategories(),
               builder: (context, snapshot) {
-            
                 final List<Category>? category = snapshot.data;
-                
+
                 return !snapshot.hasData
-                  ? const ShimmerFrave()
-                  : Container(
-                    height: 45,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: category!.length,
-                      itemBuilder: (context, i) 
-                      => InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () => Navigator.push(context, routeFrave(page: SearchForCategoryPage(idCategory: category[i].id, category: category[i].category ))),
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.only(right: 10.0),
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            decoration: BoxDecoration(
-                              color: Color(0xff5469D4).withOpacity(.1),
-                              borderRadius: BorderRadius.circular(25.0)
+                    ? const ShimmerFrave()
+                    : Container(
+                        height: 45,
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: category!.length,
+                          itemBuilder: (context, i) => InkWell(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () => Navigator.push(
+                                context,
+                                routeFrave(
+                                    page: SearchForCategoryPage(
+                                        idCategory: category[i].id,
+                                        category: category[i].category))),
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: const EdgeInsets.only(right: 10.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              decoration: BoxDecoration(
+                                  color: Color(0xff5469D4).withOpacity(.1),
+                                  borderRadius: BorderRadius.circular(25.0)),
+                              child: TextFrave(text: category[i].category),
                             ),
-                            child: TextFrave(text: category[i].category),
                           ),
-                      ),
-                    ),
-                  );
+                        ),
+                      );
               },
             ),
             const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
-                TextFrave(text: 'Populer Items', fontSize: 21, fontWeight: FontWeight.w500 ),
-                TextFrave(text: 'See All', color: ColorsFrave.primaryColor, fontSize: 17)
+                TextFrave(
+                    text: 'Populer Items',
+                    fontSize: 21,
+                    fontWeight: FontWeight.w500),
+                TextFrave(
+                    text: 'See All',
+                    color: ColorsFrave.primaryColor,
+                    fontSize: 17)
               ],
             ),
             const SizedBox(height: 20.0),
             _ListProducts(),
             const SizedBox(height: 20.0),
-            
           ],
         ),
       ),
@@ -176,63 +188,71 @@ class ClientHomePage extends StatelessWidget {
 }
 
 class _ListProducts extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Productsdb>>(
       future: productController.getProductsTopHome(),
       builder: (_, snapshot) {
-        
         final List<Productsdb>? listProduct = snapshot.data;
 
         return !snapshot.hasData
-          ? Column(
-              children: const [
-                ShimmerFrave(),
-                SizedBox(height: 10.0),
-                ShimmerFrave(),
-                SizedBox(height: 10.0),
-                ShimmerFrave(),
-              ],
-            )
-          : GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 25,
-                mainAxisSpacing: 20,
-                mainAxisExtent: 220
-              ),
-              itemCount: listProduct?.length,
-              itemBuilder: (_, i) 
-                => Container(
+            ? Column(
+                children: const [
+                  ShimmerFrave(),
+                  SizedBox(height: 10.0),
+                  ShimmerFrave(),
+                  SizedBox(height: 10.0),
+                  ShimmerFrave(),
+                ],
+              )
+            : GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 25,
+                    mainAxisSpacing: 20,
+                    mainAxisExtent: 220),
+                itemCount: listProduct?.length,
+                itemBuilder: (_, i) => Container(
                   padding: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(20.0)
-                  ),
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(20.0)),
                   child: GestureDetector(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailsProductPage(product: listProduct![i]))),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                DetailsProductPage(product: listProduct![i]))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           child: Hero(
-                            tag: listProduct![i].id, 
-                            child: Image.network('http://192.168.1.35:7070/' + listProduct[i].picture , height: 150)
-                          ),
+                              tag: listProduct![i].id,
+                              child: Image.network(
+                                  'http://192.168.0.106:8080/' +
+                                      listProduct[i].picture,
+                                  height: 150)),
                         ),
-                        TextFrave(text: listProduct[i].nameProduct , textOverflow: TextOverflow.ellipsis, fontWeight: FontWeight.w500, color: ColorsFrave.primaryColor, fontSize: 19 ),
+                        TextFrave(
+                            text: listProduct[i].nameProduct,
+                            textOverflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w500,
+                            color: ColorsFrave.primaryColor,
+                            fontSize: 19),
                         const SizedBox(height: 5.0),
-                        TextFrave(text: '\$ ${listProduct[i].price.toString()}', fontSize: 16, fontWeight: FontWeight.w500 )
+                        TextFrave(
+                            text: '\$ ${listProduct[i].price.toString()}',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500)
                       ],
                     ),
                   ),
                 ),
-            );
+              );
       },
     );
   }
 }
-
